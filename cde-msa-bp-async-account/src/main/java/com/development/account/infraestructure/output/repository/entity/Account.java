@@ -18,7 +18,7 @@ public class Account {
     private String accountNumber;
 
     @Column(name = "cl_id", nullable = false, length = 30)
-    private String clId;
+    private String clientId;
 
     @Column(name = "cu_tipo_cuenta", nullable = false, length = 20)
     private String accountType;

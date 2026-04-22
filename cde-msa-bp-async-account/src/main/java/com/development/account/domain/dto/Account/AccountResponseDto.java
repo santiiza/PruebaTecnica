@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class AccountResponseDto {
     String accountNumber;
-    String customerId;
+    String clientId;
     String accountType;
     BigDecimal initialBalance;
     Boolean status;

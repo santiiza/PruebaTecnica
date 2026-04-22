@@ -10,7 +10,9 @@ import com.development.account.infraestructure.exception.CustomDifferentAccountE
 import com.development.account.infraestructure.exception.CustomInactiveException;
 import com.development.account.infraestructure.exception.CustomNotFoundException;
 import com.development.account.infraestructure.mapper.AccountMapper;
+import com.development.account.infraestructure.output.repository.CustomerViewRepository;
 import com.development.account.infraestructure.output.repository.entity.Account;
+import com.development.account.infraestructure.output.repository.entity.ClientView;
 import com.development.account.infraestructure.output.repository.entity.Transaction;
 import com.development.account.infraestructure.util.Constants;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +29,13 @@ public class TransactionServiceImpl implements TransactionInputPort {
 
     private final AccountAdapterPort accountAdapterPort;
     private final TransactionAdapterPort transactionAdapterPort;
+    private final CustomerViewRepository customerViewRepository;
     private final AccountMapper accountMapper;
 
     @Override
     public TransactionResponseDto createTransaction(TransactionRequestDto request) {
         Account account = getActiveAccount(request.getAccountNumber());
+        validateCustomer(account.getClientId());
         BigDecimal finalBalance = calculateNewBalance(account.getInitialBalance(), request.getAmount());
         validateBalance(finalBalance);
         updateAccountBalance(account, finalBalance);
@@ -53,6 +57,7 @@ public class TransactionServiceImpl implements TransactionInputPort {
 
         //Realizar la actualización del saldo de la transaccion original
         Account accountOld = getActiveAccount(transaction.getAccount().getAccountNumber());
+        validateCustomer(accountOld.getClientId());
         if(!accountOld.getAccountNumber().equals(request.getAccountNumber())) {
             throw new CustomDifferentAccountException("The account is different");
         }
@@ -83,6 +88,7 @@ public class TransactionServiceImpl implements TransactionInputPort {
         Transaction transaction = transactionAdapterPort.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException("Transaction [" + id + "] not found"));
         Account account = getActiveAccount(transaction.getAccount().getAccountNumber());
+        validateCustomer(account.getClientId());
         BigDecimal finalBalance = calculateNewBalance(account.getInitialBalance(), transaction.getAmount().negate());
         validateBalance(finalBalance);
         updateAccountBalance(account, finalBalance);
@@ -123,5 +129,13 @@ public class TransactionServiceImpl implements TransactionInputPort {
                 ? String.format(Constants.DEPOSITO, amount)
                 : String.format(Constants.RETIRO, amount));
         return transaction;
+    }
+
+    private void validateCustomer(String clientId) {
+        ClientView customer = customerViewRepository.findById(clientId)
+                .orElseThrow(() -> new CustomNotFoundException("Client [" + clientId + "] not found"));
+        if (!customer.getStatus()) {
+            throw new CustomInactiveException("Client is inactive");
+        }
     }
 }

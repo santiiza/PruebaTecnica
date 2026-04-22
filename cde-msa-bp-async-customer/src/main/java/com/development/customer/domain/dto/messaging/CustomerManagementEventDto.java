@@ -11,10 +11,10 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerUpdatedEventDto {
+public class CustomerManagementEventDto {
     String eventId;
     Instant occurredAt;
-    Long peId;
-    String clId;
+    String clientId;
+    String name;
     Boolean status;
 }

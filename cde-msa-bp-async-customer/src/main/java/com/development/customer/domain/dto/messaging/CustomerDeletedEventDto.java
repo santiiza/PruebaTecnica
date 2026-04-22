@@ -14,6 +14,5 @@ import java.time.Instant;
 public class CustomerDeletedEventDto {
     String eventId;
     Instant occurredAt;
-    Long peId;
-    String clId;
+    String clientId;
 }

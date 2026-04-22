@@ -1,0 +1,88 @@
+version: '3.9'
+
+services:
+
+  #RabbitMQ (Mensajería Asíncrona)
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmq_management load_definitions \"/etc/rabbitmq/definitions.json\""
+    volumes:
+      - ./definitions.json:/etc/rabbitmq/definitions.json
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bank-network
+
+  #PostgreSQL - BaseDatos BDD
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: bank_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./BaseDatos.sql:/docker-entrypoint-initdb.d/BaseDatos.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - bank-network
+
+  #Customer - Microservice
+  customer-service:
+    build:
+      context: ./cde-msa-bp-async-customer
+      dockerfile: Dockerfile
+    container_name: customer-service
+    ports:
+      - "8091:8091"
+    depends_on:
+      postgres-db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/bank_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - bank-network
+
+  #Account - Microservice
+  account-service:
+    build:
+      context: ./cde-msa-bp-async-account
+      dockerfile: Dockerfile
+    container_name: account-service
+    ports:
+      - "8092:8092"
+    depends_on:
+      postgres-db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/bank_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - bank-network
+
+#Red compartida
+networks:
+  bank-network:
+    driver: bridge

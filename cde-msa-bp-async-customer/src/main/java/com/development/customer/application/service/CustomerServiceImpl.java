@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerInputPort {
     public CustomerResponseDto createCustomer(CustomerRequestDto request) {
         //Crear usuario
         Customer customer = customerMapper.toEntity(request);
-        customer.setClId(generateCustomerId());
+        customer.setClientId(generateCustomerId());
         customer.setStatus(true);
         CustomerResponseDto customerResponseDto = customerAdapterPort.save(customer);
 
@@ -58,7 +58,10 @@ public class CustomerServiceImpl implements CustomerInputPort {
         customer.setPhone(request.getPhone());
         customer.setPassword(request.getPassword());
         customer.setStatus(request.getStatus());
-        return customerAdapterPort.save(customer);
+        CustomerResponseDto customerResponseDto = customerAdapterPort.save(customer);
+        //Publicar evento de cliente actualizado
+        eventPublisher.publishCustomerUpdated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
+        return customerResponseDto;
     }
 
     @Override
@@ -90,7 +93,10 @@ public class CustomerServiceImpl implements CustomerInputPort {
         if (request.getStatus() != null) {
             customer.setStatus(request.getStatus());
         }
-        return customerAdapterPort.save(customer);
+        CustomerResponseDto customerResponseDto = customerAdapterPort.save(customer);
+        //Publicar evento de cliente actualizado
+        eventPublisher.publishCustomerUpdated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
+        return customerResponseDto;
     }
 
     @Override
@@ -105,7 +111,7 @@ public class CustomerServiceImpl implements CustomerInputPort {
     }
 
     private String generateCustomerId() {
-        return "CLI-" + UUID.randomUUID()
+        return UUID.randomUUID()
                 .toString()
                 .substring(0, 8)
                 .toUpperCase();

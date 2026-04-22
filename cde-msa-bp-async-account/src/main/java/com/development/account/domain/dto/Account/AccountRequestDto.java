@@ -13,21 +13,21 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountRequestDto {
-    @NotBlank(message = "El número de cuenta no puede estar vacío")
-    @Pattern(regexp = "^[0-9]+$", message = "Caracteres inválidos")
-    @Size(max = 20, message = "debe tener máximo {max} caracteres.")
+    @NotBlank(message = "Account number must not be empty.")
+    @Pattern(regexp = "^[0-9]+$", message = "Account number must match pattern {regexp}")
+    @Size(max = 20, message = "Account number must be maximum {max} characters")
     String accountNumber;
-    @NotBlank(message = "El nombre del cliente no puede estar vacío")
-    @Pattern(regexp = "^[A-Za-z ]+$", message = "Solo se permiten letras y espacios")
-    @Size(max = 80, message = "debe tener máximo {max} caracteres.")
-    String customer;
-    @NotBlank(message = "El tipo de cuenta no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Caracteres inválidos")
-    @Size(max = 20, message = "debe tener máximo {max} caracteres.")
+    @NotBlank(message = "Client Id must not be empty.")
+    @Pattern(regexp = "^[0-9A-Za-z]+$", message = "Client Id must match pattern {regexp}")
+    @Size(max = 30, message = "Client Id must be maximum {max} characters")
+    String clientId;
+    @NotBlank(message = "Account type must not be empty.")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Account type must match pattern {regexp}")
+    @Size(max = 20, message = "Account type must be maximum {max} characters")
     String accountType;
     @PositiveOrZero
-    @Digits(integer = 15, fraction = 2, message = "Máximo 15 dígitos enteros y 2 decimales")
+    @Digits(integer = 15, fraction = 2, message = "Initial Balance, maximum 15 integer digits and 2 decimal places.")
     BigDecimal initialBalance;
-    @NotNull(message = "El estado no puede ser nulo")
+    @NotNull(message = "Status must not be null.")
     Boolean status;
 }

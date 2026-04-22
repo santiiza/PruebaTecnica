@@ -13,7 +13,7 @@ public class AccountMapper {
     public AccountResponseDto toResponseDto(Account entity) {
         return AccountResponseDto.builder()
                 .accountNumber(entity.getAccountNumber())
-                .customerId(entity.getClId())
+                .clientId(entity.getClientId())
                 .accountType(entity.getAccountType())
                 .initialBalance(entity.getInitialBalance())
                 .status(entity.getStatus())
@@ -23,7 +23,7 @@ public class AccountMapper {
     public Account toEntity(AccountRequestDto dto) {
         Account account = new Account();
         account.setAccountNumber(dto.getAccountNumber());
-        account.setClId(dto.getCustomer());
+        account.setClientId(dto.getClientId());
         account.setAccountType(dto.getAccountType());
         account.setInitialBalance(dto.getInitialBalance());
         account.setStatus(dto.getStatus());

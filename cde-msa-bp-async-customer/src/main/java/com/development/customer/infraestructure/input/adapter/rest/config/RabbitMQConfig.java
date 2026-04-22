@@ -12,25 +12,44 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String EXCHANGE = "customer.exchange";
-    public static final String QUEUE = "customer.queue";
-    public static final String ROUTING_KEY = "customer.created";
+
+    public static final String ROUTING_KEY_CREATED = "customer.created";
+    public static final String ROUTING_KEY_UPDATED = "customer.updated";
+    public static final String ROUTING_KEY_DELETED = "customer.deleted";
 
     @Bean
     public DirectExchange exchange() {
-        return new DirectExchange(EXCHANGE);
+        return new DirectExchange(EXCHANGE, true, false);
     }
 
     @Bean
-    public Queue queue() {
-        return new Queue(QUEUE);
+    public Queue createdQueue() {
+        return new Queue("customer.created.queue", true);
     }
 
     @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(ROUTING_KEY);
+    public Queue updatedQueue() {
+        return new Queue("customer.updated.queue", true);
+    }
+
+    @Bean
+    public Queue deletedQueue() {
+        return new Queue("customer.deleted.queue", true);
+    }
+
+    @Bean
+    public Binding bindingCreated(Queue createdQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(createdQueue).to(exchange).with(ROUTING_KEY_CREATED);
+    }
+
+    @Bean
+    public Binding bindingUpdated(Queue updatedQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(updatedQueue).to(exchange).with(ROUTING_KEY_UPDATED);
+    }
+
+    @Bean
+    public Binding bindingDeleted(Queue deletedQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(deletedQueue).to(exchange).with(ROUTING_KEY_DELETED);
     }
 
     @Bean

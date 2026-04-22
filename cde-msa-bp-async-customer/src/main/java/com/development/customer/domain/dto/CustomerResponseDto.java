@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerResponseDto {
     Long id;
-    String clId;
+    String clientId;
     String name;
     String gender;
     Integer age;

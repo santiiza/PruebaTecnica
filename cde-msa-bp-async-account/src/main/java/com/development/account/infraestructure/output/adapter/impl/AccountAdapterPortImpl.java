@@ -8,6 +8,7 @@ import com.development.account.infraestructure.output.repository.entity.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,16 @@ public class AccountAdapterPortImpl implements AccountAdapterPort {
     @Override
     public Optional<Account> findById(String id) {
         return accountRepository.findById(id);
+    }
+
+    @Override
+    public List<Account> findByClientId(String clientId) {
+        return accountRepository.findByClientId(clientId);
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return accountRepository.existsById(id);
     }
 
     @Override

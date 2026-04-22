@@ -76,3 +76,15 @@ CREATE INDEX idx_pa_movimiento_fecha
 CREATE INDEX idx_pa_movimiento_numero
   ON pasivo.pa_movimiento (cu_numero);
 
+-- ==============================
+-- Vista: Cliente
+-- ==============================
+CREATE TABLE pasivo.cliente_view (
+  id                  VARCHAR(30)   PRIMARY KEY,
+  nombre              VARCHAR(80)   NOT NULL,
+  estado              BOOLEAN       NOT NULL
+);
+
+CREATE INDEX idx_cliente_view
+  ON pasivo.cliente_view (nombre);
+

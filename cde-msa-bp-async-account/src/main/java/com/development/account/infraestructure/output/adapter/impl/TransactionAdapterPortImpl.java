@@ -8,6 +8,8 @@ import com.development.account.infraestructure.output.repository.entity.Transact
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,11 @@ public class TransactionAdapterPortImpl implements TransactionAdapterPort {
     @Override
     public Optional<Transaction> findById(Long id) {
         return transactionRepository.findById(id);
+    }
+
+    @Override
+    public List<Transaction> findByAccountNumberAndTransactionDateBetween(String accountNumber, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return transactionRepository.findByAccount_AccountNumberAndTransactionDateBetween(accountNumber, startDateTime, endDateTime);
     }
 
     @Override

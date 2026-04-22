@@ -1,0 +1,25 @@
+{
+  "rabbit_version": "3.9",
+  "users": [
+    { "name": "guest", "password": "guest", "tags": "administrator" }
+  ],
+  "vhosts": [
+    { "name": "/" }
+  ],
+  "permissions": [
+    { "user": "guest", "vhost": "/", "configure": ".*", "write": ".*", "read": ".*" }
+  ],
+  "queues": [
+    { "name": "customer.created.queue", "vhost": "/", "durable": true },
+    { "name": "customer.updated.queue", "vhost": "/", "durable": true },
+    { "name": "customer.deleted.queue", "vhost": "/", "durable": true }
+  ],
+  "exchanges": [
+    { "name": "customer.exchange", "vhost": "/", "type": "direct", "durable": true, "auto_delete": false }
+  ],
+  "bindings": [
+    { "source": "customer.exchange", "vhost": "/", "destination": "customer.created.queue", "destination_type": "queue", "routing_key": "customer.created" },
+    { "source": "customer.exchange", "vhost": "/", "destination": "customer.updated.queue", "destination_type": "queue", "routing_key": "customer.updated" },
+    { "source": "customer.exchange", "vhost": "/", "destination": "customer.deleted.queue", "destination_type": "queue", "routing_key": "customer.deleted" }
+  ]
+}

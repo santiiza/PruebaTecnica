@@ -1,4 +1,4 @@
-package com.development.customer.domain.dto.messaging;
+package com.development.account.domain.dto.Messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,10 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerDeletedEventDto {
+public class CustomerManagementEventDto {
     String eventId;
     Instant occurredAt;
-    Long peId;
-    String clId;
+    String clientId;
+    String name;
+    Boolean status;
 }

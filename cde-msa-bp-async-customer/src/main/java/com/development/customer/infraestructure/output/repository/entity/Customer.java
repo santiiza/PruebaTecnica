@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Customer extends Person {
     @Column(name = "cl_id", nullable = false, unique = true)
-    private String clId;
+    private String clientId;
 
     @Column(name = "cl_contrasenia", nullable = false)
     private String password;

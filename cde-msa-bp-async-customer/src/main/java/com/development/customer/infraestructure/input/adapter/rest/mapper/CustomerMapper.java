@@ -2,9 +2,8 @@ package com.development.customer.infraestructure.input.adapter.rest.mapper;
 
 import com.development.customer.domain.dto.CustomerRequestDto;
 import com.development.customer.domain.dto.CustomerResponseDto;
-import com.development.customer.domain.dto.messaging.CustomerCreatedEventDto;
 import com.development.customer.domain.dto.messaging.CustomerDeletedEventDto;
-import com.development.customer.domain.dto.messaging.CustomerUpdatedEventDto;
+import com.development.customer.domain.dto.messaging.CustomerManagementEventDto;
 import com.development.customer.infraestructure.output.repository.entity.Customer;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class CustomerMapper {
     public CustomerResponseDto toResponseDto(Customer entity) {
         return CustomerResponseDto.builder()
                 .id(entity.getId())
-                .clId(entity.getClId())
+                .clientId(entity.getClientId())
                 .name(entity.getName())
                 .gender(entity.getGender())
                 .age(entity.getAge())
@@ -39,23 +38,12 @@ public class CustomerMapper {
                 .build();
     }
 
-    public CustomerCreatedEventDto toCustomerCreatedEvent(CustomerResponseDto entity) {
-        return CustomerCreatedEventDto.builder()
+    public CustomerManagementEventDto toCustomerCreatedEvent(CustomerResponseDto entity) {
+        return CustomerManagementEventDto.builder()
                 .eventId(UUID.randomUUID().toString())
                 .occurredAt(Instant.now())
-                .peId(entity.getId())
-                .clId(entity.getClId())
-                .identification(entity.getIdentification())
-                .status(entity.getStatus())
-                .build();
-    }
-
-    public CustomerUpdatedEventDto toCustomerUpdatedEvent(Customer entity) {
-        return CustomerUpdatedEventDto.builder()
-                .eventId(UUID.randomUUID().toString())
-                .occurredAt(Instant.now())
-                .peId(entity.getId())
-                .clId(entity.getClId())
+                .clientId(entity.getClientId())
+                .name(entity.getName())
                 .status(entity.getStatus())
                 .build();
     }
@@ -64,8 +52,7 @@ public class CustomerMapper {
         return CustomerDeletedEventDto.builder()
                 .eventId(UUID.randomUUID().toString())
                 .occurredAt(Instant.now())
-                .peId(entity.getId())
-                .clId(entity.getClId())
+                .clientId(entity.getClientId())
                 .build();
     }
 }
