@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/reportes")
 @RequiredArgsConstructor
+@Slf4j
 public class ReportController {
 
     private final ReportInputPort reportInputPort;
@@ -38,6 +40,7 @@ public class ReportController {
             //@Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}+$", message = "Client Id must match pattern {regexp}")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate endDate) {
+        log.info("|-> Started getAccountStatement clientId: {}, startDate: {}, endDate: {}", clientId, startDate, endDate);
 
         return reportInputPort.generateAccountStatement(clientId, startDate, endDate);
     }
