@@ -2,6 +2,7 @@ package com.development.customer.application.service;
 
 import com.development.customer.application.input.port.CustomerInputPort;
 import com.development.customer.application.output.port.CustomerAdapterPort;
+import com.development.customer.application.output.port.NotificationAdapterPort;
 import com.development.customer.domain.dto.CustomerResponseDto;
 import com.development.customer.infraestructure.input.adapter.rest.bean.DataObject;
 import com.development.customer.infraestructure.input.adapter.rest.mapper.CustomerMapper;
@@ -19,8 +20,8 @@ import static org.mockito.Mockito.*;
 class CustomerServiceImplTest {
 
     CustomerAdapterPort customerAdapterPort;
+    NotificationAdapterPort notificationAdapterPort;
     CustomerMapper customerMapper;
-    CustomerEventPublisher eventPublisher;
 
     CustomerInputPort customerService;
     Customer customerEntity;
@@ -30,12 +31,12 @@ class CustomerServiceImplTest {
     void setup() {
         customerAdapterPort = mock(CustomerAdapterPort.class);
         customerMapper = mock(CustomerMapper.class);
-        eventPublisher = mock(CustomerEventPublisher.class);
+        notificationAdapterPort = mock(CustomerEventPublisher.class);
         dataObject = new DataObject();
         customerService = new CustomerServiceImpl(
                 customerAdapterPort,
-                customerMapper,
-                eventPublisher
+                notificationAdapterPort,
+                customerMapper
         );
 
         customerEntity = new Customer();
@@ -64,10 +65,10 @@ class CustomerServiceImplTest {
         assertTrue(savedCustomer.getStatus());
 
         // Verificar evento publicado
-        verify(eventPublisher, times(1))
+        verify(notificationAdapterPort, times(1))
                 .publishCustomerCreated(any());
 
-        verifyNoMoreInteractions(eventPublisher);
+        verifyNoMoreInteractions(notificationAdapterPort);
     }
 
 }

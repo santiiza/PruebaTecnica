@@ -2,14 +2,15 @@ package com.development.customer.application.service;
 
 import com.development.customer.application.input.port.CustomerInputPort;
 import com.development.customer.application.output.port.CustomerAdapterPort;
+import com.development.customer.application.output.port.NotificationAdapterPort;
 import com.development.customer.domain.dto.CustomerPatchRequestDto;
 import com.development.customer.domain.dto.CustomerRequestDto;
 import com.development.customer.domain.dto.CustomerResponseDto;
 import com.development.customer.infraestructure.exception.CustomNotFoundException;
 import com.development.customer.infraestructure.input.adapter.rest.mapper.CustomerMapper;
-import com.development.customer.infraestructure.output.messaging.CustomerEventPublisher;
 import com.development.customer.infraestructure.output.repository.entity.Customer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,12 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CustomerServiceImpl implements CustomerInputPort {
 
     private final CustomerAdapterPort customerAdapterPort;
+    private final NotificationAdapterPort notificationAdapterPort;
     private final CustomerMapper customerMapper;
-    private final CustomerEventPublisher eventPublisher;
 
     @Override
     public CustomerResponseDto createCustomer(CustomerRequestDto request) {
@@ -33,7 +35,8 @@ public class CustomerServiceImpl implements CustomerInputPort {
         CustomerResponseDto customerResponseDto = customerAdapterPort.save(customer);
 
         //Publicar evento de cliente creado
-        eventPublisher.publishCustomerCreated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
+        log.info("Notification -> Client {} created", customerResponseDto.getClientId());
+        notificationAdapterPort.publishCustomerCreated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
         return customerResponseDto;
     }
 
@@ -60,7 +63,8 @@ public class CustomerServiceImpl implements CustomerInputPort {
         customer.setStatus(request.getStatus());
         CustomerResponseDto customerResponseDto = customerAdapterPort.save(customer);
         //Publicar evento de cliente actualizado
-        eventPublisher.publishCustomerUpdated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
+        log.info("Notification -> Client {} modified", customerResponseDto.getClientId());
+        notificationAdapterPort.publishCustomerUpdated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
         return customerResponseDto;
     }
 
@@ -95,7 +99,8 @@ public class CustomerServiceImpl implements CustomerInputPort {
         }
         CustomerResponseDto customerResponseDto = customerAdapterPort.save(customer);
         //Publicar evento de cliente actualizado
-        eventPublisher.publishCustomerUpdated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
+        log.info("Notification -> Client {} modified", customerResponseDto.getClientId());
+        notificationAdapterPort.publishCustomerUpdated(customerMapper.toCustomerCreatedEvent(customerResponseDto));
         return customerResponseDto;
     }
 
@@ -107,7 +112,8 @@ public class CustomerServiceImpl implements CustomerInputPort {
         customerAdapterPort.delete(customer);
 
         //Publicar evento de cliente eliminado
-        eventPublisher.publishCustomerDeleted(customerMapper.toCustomerDeletedEvent(customer));
+        log.info("Notification -> Client {} deleted", id);
+        notificationAdapterPort.publishCustomerDeleted(customerMapper.toCustomerDeletedEvent(customer));
     }
 
     private String generateCustomerId() {

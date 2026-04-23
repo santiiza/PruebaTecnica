@@ -1,5 +1,6 @@
 package com.development.customer.infraestructure.output.messaging;
 
+import com.development.customer.application.output.port.NotificationAdapterPort;
 import com.development.customer.domain.dto.messaging.CustomerManagementEventDto;
 import com.development.customer.domain.dto.messaging.CustomerDeletedEventDto;
 import com.development.customer.infraestructure.input.adapter.rest.config.RabbitMQConfig;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CustomerEventPublisher {
+public class CustomerEventPublisher implements NotificationAdapterPort {
 
     private final AmqpTemplate amqpTemplate;
 
