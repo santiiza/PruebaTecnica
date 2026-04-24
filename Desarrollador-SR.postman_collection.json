@@ -202,6 +202,38 @@
               }
             },
             "url": {
+              "raw": "http://localhost:8091/clientes/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8091",
+              "path": [
+                "clientes",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
               "raw": "http://localhost:8091/clientes/2",
               "protocol": "http",
               "host": [
@@ -226,7 +258,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"status\": true\r\n}",
+              "raw": "{\r\n    \"status\": false\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -296,7 +328,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"accountNumber\": \"585545\",\r\n    \"accountType\": \"Corriente\",\r\n    \"clientId\": \"6D6B80BA\",\r\n    \"initialBalance\": 1000,\r\n    \"status\": true\r\n}",
+              "raw": "{\r\n    \"accountNumber\": \"585545\",\r\n    \"accountType\": \"Corriente\",\r\n    \"clientId\": \"6AD2E66F\",\r\n    \"initialBalance\": 1000,\r\n    \"status\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -498,7 +530,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"accountNumber\": \"585545\",\r\n    \"amount\": -100\r\n}",
+              "raw": "{\r\n    \"accountNumber\": \"585545\",\r\n    \"amount\": -200\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
